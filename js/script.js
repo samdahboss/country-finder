@@ -7,7 +7,7 @@ let countries = [];
 fetch("https://restcountries.com/v3.1/all")
   .then(res => res.json())
   .then(data => {
-    countries = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+    countries = data.sort((a, b) => b.population - a.population); // Sort by population (descending)
     renderCountries(countries.slice(0, 20)); // First 20 countries
   });
 

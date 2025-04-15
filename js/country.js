@@ -1,4 +1,5 @@
 const params = new URLSearchParams(window.location.search);
+console.log(params);
 const countryName = params.get("name");
 const details = document.getElementById("details");
 
@@ -35,14 +36,14 @@ async function loadCountryDetails() {
           <p><strong>Languages:</strong> ${languageList}</p>
         </div>
         ${
-          wikiData.thumbnail
-            ? `<img src="${wikiData.thumbnail.source}" class="w-1/2 max-w-md mx-auto mb-3 rounded shadow" />`
+          wikiData.originalimage
+            ? `<img src="${wikiData.originalimage.source}" class="w-1/2 max-w-md mx-auto mb-3 rounded shadow" />`
             : ""
         }
       </div>
       <div class="mt-6">
         <h3 class="text-3xl font-bold mb-2">About ${name.common}</h3>
-        <p class="text-gray-700 text-xl">${wikiData.extract}</p>
+        <p class="text-gray-700 text-xl">${wikiData.extract_html}</p>
         <a href="${wikiData.content_urls.desktop.page}" target="_blank" class="underline">
           <button class="bg-gray-700 p-2 text-white rounded-lg mt-6 ml-auto">Read more on Wikipedia</button>
         </a>
