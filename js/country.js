@@ -1,22 +1,16 @@
 const params = new URLSearchParams(window.location.search);
-console.log(params);
 const countryName = params.get("name");
 const details = document.getElementById("details");
 
+// 👇 Add your OpenWeatherMap API key here
+const WEATHER_API_KEY = "3c1d7d8ab612e0e2f53541f5722f4d0e";
+
 async function loadCountryDetails() {
   try {
-    // Fetch from REST Countries API
+    // REST Countries API
     const [countryData] = await fetch(
       `https://restcountries.com/v3.1/name/${countryName}?fullText=true`
     ).then((res) => res.json());
-
-    // Wikipedia API
-    const wikiRes = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(
-        countryName
-      )}`
-    );
-    const wikiData = await wikiRes.json();
 
     const { name, capital, region, population, currencies, languages, latlng } =
       countryData;
@@ -24,8 +18,33 @@ async function loadCountryDetails() {
     const currency = Object.values(currencies)[0]?.name;
     const languageList = Object.values(languages).join(", ");
 
-    //Inject HTML first (including map container)
+    // Wikipedia API
+    const wikiRes = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(countryName)}`
+    );
+    const wikiData = await wikiRes.json();
+
+    // 🌤️ OpenWeatherMap API
+    const weatherRes = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${capital[0]}&units=metric&appid=${WEATHER_API_KEY}`
+    );
+    const weatherData = await weatherRes.json();
+
+    const temp = weatherData.main.temp;
+    const condition = weatherData.weather[0].main;
+    const icon = weatherData.weather[0].icon;
+    const weatherIconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+
+    // Inject HTML (including weather and map container)
     details.innerHTML = `
+      <div class="bg-blue-100 p-4 mb-6 rounded-lg shadow text-center">
+        <h3 class="text-xl font-bold mb-2">Weather in ${capital[0]}</h3>
+        <div class="flex justify-center items-center gap-4">
+          <img src="${weatherIconUrl}" alt="${condition}" />
+          <p class="text-lg">${temp}°C - ${condition}</p>
+        </div>
+      </div>
+
       <div class="lg:flex items-center space-y-6 bg-white mb-6">
         <div class="lg:w-1/2 p-2 text-center lg:text-left text-2xl">
           <h2 class="text-4xl font-bold mb-2">${name.common}</h2>
@@ -36,11 +55,12 @@ async function loadCountryDetails() {
           <p><strong>Languages:</strong> ${languageList}</p>
         </div>
         ${
-          wikiData.originalimage
-            ? `<img src="${wikiData.originalimage.source}" class="w-1/2 max-w-md mx-auto mb-3 rounded shadow" />`
+          wikiData.thumbnail
+            ? `<img src="${wikiData.thumbnail.source}" class="w-1/2 max-w-md mx-auto mb-3 rounded shadow" />`
             : ""
         }
       </div>
+
       <div class="mt-6">
         <h3 class="text-3xl font-bold mb-2">About ${name.common}</h3>
         <p class="text-gray-700 text-xl">${wikiData.extract_html}</p>
@@ -48,12 +68,13 @@ async function loadCountryDetails() {
           <button class="bg-gray-700 p-2 text-white rounded-lg mt-6 ml-auto">Read more on Wikipedia</button>
         </a>
       </div>
+
       <div class="mt-6">
         <div id="map" class="w-full h-64 my-6 rounded-md shadow"></div>
       </div>
     `;
 
-    //Initialize map AFTER the DOM update
+    // 🌍 Initialize map AFTER DOM update
     const map = L.map("map").setView(latlng, 8);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
@@ -64,6 +85,7 @@ async function loadCountryDetails() {
       .addTo(map)
       .bindPopup(`<b>${name.common}</b><br>${capital[0]}`)
       .openPopup();
+
   } catch (error) {
     console.error(error);
     details.innerHTML = `<p class="text-red-500">Failed to load data for ${countryName}.</p>`;
