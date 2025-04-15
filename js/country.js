@@ -3,7 +3,6 @@ const countryName = params.get("name");
 const details = document.getElementById("details");
 
 // 👇 Add your OpenWeatherMap API key here
-const WEATHER_API_KEY = "3c1d7d8ab612e0e2f53541f5722f4d0e";
 
 async function loadCountryDetails() {
   try {
