@@ -2,26 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Country Finder</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Country Explorer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body>
-    <div class="container">
-      <h1>Country Finder</h1>
-      <div class="search-container">
-        <input
-          type="text"
-          id="country-input"
-          placeholder="Enter country name..."
-        />
-        <button id="search-btn">Search</button>
-      </div>
-      <div class="country-details" id="country-details">
-        <!-- Country details will be dynamically inserted here -->
-      </div>
+  <body class="bg-gray-50 p-6">
+    <div class="max-w-5xl mx-auto">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search..."
+        class="w-full p-3 rounded-lg border shadow mb-6"
+      />
+
+      <div
+        id="autocomplete"
+        class="bg-white shadow absolute w-full rounded-lg z-10 hidden"
+      ></div>
+
+      <h2 class="text-xl font-semibold mb-4 text-center text-indigo-600">
+        Popular Destinations
+      </h2>
+      <div
+        id="countryList"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      ></div>
     </div>
 
-    <script src="./script.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
