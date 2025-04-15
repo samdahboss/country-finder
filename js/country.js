@@ -24,6 +24,7 @@ async function loadCountryDetails() {
     const wikiData = await wikiRes.json();
 
     // 🌤️ OpenWeatherMap API
+    const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
     const weatherRes = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${capital[0]}&units=metric&appid=${WEATHER_API_KEY}`
     );
