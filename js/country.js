@@ -25,8 +25,8 @@ async function loadCountryDetails() {
 
     //Inject HTML first (including map container)
     details.innerHTML = `
-      <div class="lg:flex items-center bg-white mb-6">
-        <div class="w-1/2 p-2 text-left text-2xl">
+      <div class="lg:flex items-center space-y-6 bg-white mb-6">
+        <div class="lg:w-1/2 p-2 text-center lg:text-left text-2xl">
           <h2 class="text-4xl font-bold mb-2">${name.common}</h2>
           <p><strong>Capital:</strong> ${capital}</p>
           <p><strong>Region:</strong> ${region}</p>
